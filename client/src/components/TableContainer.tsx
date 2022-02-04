@@ -4,14 +4,28 @@ import TableHeader from './TableHeader';
 import { Table } from 'react-bootstrap';
 import axios from 'axios';
 
+
+export interface dataType {
+  ID: number,
+  firstName: string | null,
+  lastName: string | null,
+  sex: string | null,
+  startDate: string | null,
+  salary: number | null,
+  city: string | null,
+  state: string | null,
+}
+
 const TableContainer = () => {
-  const [tableRow, tableRowSet] = useState();
-  const [loading, loadingSet] = useState(true); 
+  const [tableRow, tableRowSet] = useState<dataType[]>();
+  const [loading, loadingSet] = useState<boolean>(true); 
 
   useEffect(() => {
-    setInterval(updateTable, 10000)
+    var handle = setInterval(updateTable, 5000)
+    setInterval(updateTable, 5000)
+    console.log('updating')
     return (
-      clearInterval(updateTable)
+      clearInterval(handle)
     )
   }, [])
 
@@ -22,6 +36,7 @@ const TableContainer = () => {
   }, [tableRow])
 
   const updateTable = () => {
+
     loadingSet(true)
     axios.get("http://localhost:8080/employees")
     .then((response) => { 
@@ -47,7 +62,7 @@ const TableContainer = () => {
         <TableHeader />
       </thead>
       <tbody>
-          {tableRow && tableRow.map((data)=>{
+          {tableRow && tableRow.map((data: dataType, index: number): JSX.Element => {
             const ID = data.ID;
             const firstName = data.firstName;
             const lastName = data.lastName;
@@ -56,10 +71,10 @@ const TableContainer = () => {
             const salary = data.salary; 
             const state = data.state;
             const city = data.city; 
-            const zip = data.zip; 
             
             return(
               <TableRows 
+              key = {index}
               ID = {ID} 
               firstName = {firstName}
               lastName = {lastName}
@@ -67,8 +82,7 @@ const TableContainer = () => {
               sex = {sex}    
               salary = {salary} 
               state = {state} 
-              city = {city} 
-              zip = {zip}          
+              city = {city}          
               />
             )
           })}

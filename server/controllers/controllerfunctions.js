@@ -1,21 +1,27 @@
 import {sql} from '../index.js';
 
 export const createEmployees = ( req, res) => {
+
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+
     const id = Number(new Date().valueOf().toString().slice(4,8));
     const firstName = req.body.message.firstName;
     const lastName = req.body.message.lastName;
     const startDate = req.body.message.startDate;
     const city = req.body.message.city;
     const state = req.body.message.state;
-    const zip = Number(req.body.message.zip);
-    const sex = 'M';
+    const sex = capitalizeFirstLetter(req.body.message.sex);
     const salary = Number(req.body.message.salary);
     console.log(req.body.message);
 
-    let q = `INSERT INTO employee (ID,firstName, lastName, startDate, sex, salary, city, state, zip) VALUES (?,?,?,?,?,?,?,?,?)`;
+
+    let q = `INSERT INTO employee (ID,firstName, lastName, startDate, sex, salary, city, state) VALUES (?,?,?,?,?,?,?,?)`;
 
         
-    sql.query(q,[id, firstName, lastName, startDate, sex,salary, city, state, zip], (err, result)=>{
+    sql.query(q,[id, firstName, lastName, startDate, sex,salary, city, state], (err, result)=>{
         if(err) throw err; 
         res.send("employee inserted");
     });
